@@ -30,7 +30,7 @@ function App() {
     try {
 
       await axios.post(
-        `http://127.0.0.1:8000/api/approve/${id}/`
+        `https://breathe-esg-platform-production.up.railway.app/api/approve/${id}/`
       );
 
       fetchRecords();
