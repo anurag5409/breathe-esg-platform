@@ -1,3 +1,50 @@
+# Breathe ESG Platform
+
+A full-stack ESG data ingestion and analyst review workflow platform built using Django REST Framework and React.
+
+---
+
+## Live Demo
+
+Frontend:
+https://vercel.com/anurag-singh-s-projects3/breathe-esg-platform
+
+Backend:
+https://breathe-esg-platform-production.up.railway.app/api/reviews/
+
+---
+
+## Screenshots
+
+### Dashboard
+
+![Dashboard](screenshots/dashboard.png)
+
+### Approved Records
+
+![Approved](screenshots/approved-records.png)
+
+### Backend API
+
+![API](screenshots/backend-api.png)
+
+---
+
+## Features
+
+- SAP CSV ingestion
+- Utility data ingestion
+- Corporate travel ingestion
+- Scope 1/2/3 support
+- Suspicious activity detection
+- Analyst approval workflow
+- Audit logging
+- Multi-tenant architecture
+- REST APIs
+- React dashboard
+- Railway deployment
+- Vercel deployment 
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
