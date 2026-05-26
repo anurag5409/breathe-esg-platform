@@ -1,10 +1,9 @@
-from django.shortcuts import render
-
 import pandas as pd
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 
 from .models import *
 from .serializers import *
@@ -12,10 +11,12 @@ from .serializers import *
 
 class SAPUploadView(APIView):
 
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
     def post(self, request):
 
         if 'file' not in request.FILES:
-
             return Response(
                 {"error": "No file uploaded"},
                 status=status.HTTP_400_BAD_REQUEST
@@ -34,7 +35,7 @@ class SAPUploadView(APIView):
             source = DataSource.objects.create(
                 tenant=tenant,
                 source_type='sap',
-                uploaded_by=request.user if request.user.is_authenticated else None,
+                uploaded_by=None,
                 original_filename=file.name
             )
 
@@ -48,7 +49,6 @@ class SAPUploadView(APIView):
                     suspicious = True
 
                 record = EmissionRecord.objects.create(
-
                     tenant=tenant,
                     source=source,
 
@@ -86,10 +86,12 @@ class SAPUploadView(APIView):
 
 class UtilityUploadView(APIView):
 
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
     def post(self, request):
 
         if 'file' not in request.FILES:
-
             return Response(
                 {"error": "No file uploaded"},
                 status=status.HTTP_400_BAD_REQUEST
@@ -108,7 +110,7 @@ class UtilityUploadView(APIView):
             source = DataSource.objects.create(
                 tenant=tenant,
                 source_type='utility',
-                uploaded_by=request.user if request.user.is_authenticated else None,
+                uploaded_by=None,
                 original_filename=file.name
             )
 
@@ -116,13 +118,7 @@ class UtilityUploadView(APIView):
 
             for _, row in df.iterrows():
 
-                suspicious = False
-
-                if float(row['kwh']) > 10000:
-                    suspicious = True
-
                 record = EmissionRecord.objects.create(
-
                     tenant=tenant,
                     source=source,
 
@@ -138,9 +134,7 @@ class UtilityUploadView(APIView):
 
                     normalized_unit='kgCO2e',
 
-                    description=row['meter'],
-
-                    suspicious=suspicious
+                    description=row['meter']
                 )
 
                 created_records.append(record.id)
@@ -160,10 +154,12 @@ class UtilityUploadView(APIView):
 
 class TravelUploadView(APIView):
 
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
     def post(self, request):
 
         if 'file' not in request.FILES:
-
             return Response(
                 {"error": "No file uploaded"},
                 status=status.HTTP_400_BAD_REQUEST
@@ -182,7 +178,7 @@ class TravelUploadView(APIView):
             source = DataSource.objects.create(
                 tenant=tenant,
                 source_type='travel',
-                uploaded_by=request.user if request.user.is_authenticated else None,
+                uploaded_by=None,
                 original_filename=file.name
             )
 
@@ -192,23 +188,22 @@ class TravelUploadView(APIView):
 
                 suspicious = False
 
-                if float(row['distance']) > 5000:
+                if float(row['distance_km']) > 5000:
                     suspicious = True
 
                 record = EmissionRecord.objects.create(
-
                     tenant=tenant,
                     source=source,
 
-                    category=row['travel_type'],
+                    category=row['mode'],
 
                     scope='Scope 3',
 
-                    activity_value=float(row['distance']),
+                    activity_value=float(row['distance_km']),
 
                     activity_unit='km',
 
-                    normalized_value=float(row['distance']) * 0.14,
+                    normalized_value=float(row['distance_km']) * 0.21,
 
                     normalized_unit='kgCO2e',
 
@@ -234,6 +229,9 @@ class TravelUploadView(APIView):
 
 class ReviewQueueView(APIView):
 
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
     def get(self, request):
 
         records = EmissionRecord.objects.all().order_by('-created_at')
@@ -248,6 +246,9 @@ class ReviewQueueView(APIView):
 
 class ApproveRecordView(APIView):
 
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
     def post(self, request, pk):
 
         try:
@@ -260,7 +261,7 @@ class ApproveRecordView(APIView):
             AuditLog.objects.create(
                 record=record,
                 action='approved',
-                user=request.user if request.user.is_authenticated else None,
+                user=None,
                 notes='Approved by analyst'
             )
 

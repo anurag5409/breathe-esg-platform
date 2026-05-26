@@ -1,23 +1,21 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-function App() {
+const API_URL =
+  "https://breathe-esg-platform-production.up.railway.app";
 
+function App() {
   const [records, setRecords] = useState([]);
 
   const fetchRecords = async () => {
-
     try {
-
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/reviews/"
+        `${API_URL}/api/reviews/`
       );
 
       setRecords(response.data);
-
     } catch (error) {
-
-      console.error(error);
+      console.error("Fetch error:", error);
     }
   };
 
@@ -26,33 +24,29 @@ function App() {
   }, []);
 
   const approveRecord = async (id) => {
-
     try {
-
       await axios.post(
-        `https://breathe-esg-platform-production.up.railway.app/api/approve/${id}/`
+        `${API_URL}/api/approve/${id}/`
       );
 
       fetchRecords();
 
     } catch (error) {
-
-      console.error(error);
+      console.error("Approval failed:", error);
     }
   };
 
   const totalRecords = records.length;
 
   const approvedRecords = records.filter(
-    r => r.status === "approved"
+    (r) => r.status === "approved"
   ).length;
 
   const suspiciousRecords = records.filter(
-    r => r.suspicious
+    (r) => r.suspicious
   ).length;
 
   return (
-
     <div
       style={{
         minHeight: "100vh",
@@ -61,9 +55,6 @@ function App() {
         paddingBottom: "40px"
       }}
     >
-
-      {/* HEADER */}
-
       <div
         style={{
           background: "#0f172a",
@@ -72,7 +63,6 @@ function App() {
           boxShadow: "0 2px 10px rgba(0,0,0,0.1)"
         }}
       >
-
         <h1
           style={{
             margin: 0,
@@ -90,10 +80,7 @@ function App() {
         >
           Emissions ingestion and analyst review workflow
         </p>
-
       </div>
-
-      {/* STATS */}
 
       <div
         style={{
@@ -103,9 +90,9 @@ function App() {
           flexWrap: "wrap"
         }}
       >
-
         <div style={cardStyle}>
           <h3>Total Records</h3>
+
           <p style={numberStyle}>
             {totalRecords}
           </p>
@@ -113,6 +100,7 @@ function App() {
 
         <div style={cardStyle}>
           <h3>Approved</h3>
+
           <p
             style={{
               ...numberStyle,
@@ -125,6 +113,7 @@ function App() {
 
         <div style={cardStyle}>
           <h3>Suspicious Records</h3>
+
           <p
             style={{
               ...numberStyle,
@@ -134,10 +123,7 @@ function App() {
             {suspiciousRecords}
           </p>
         </div>
-
       </div>
-
-      {/* TABLE */}
 
       <div
         style={{
@@ -148,7 +134,6 @@ function App() {
           boxShadow: "0 2px 10px rgba(0,0,0,0.08)"
         }}
       >
-
         <h2 style={{ marginBottom: "10px" }}>
           Analyst Review Queue
         </h2>
@@ -168,15 +153,12 @@ function App() {
             borderCollapse: "collapse"
           }}
         >
-
           <thead>
-
             <tr
               style={{
                 background: "#f1f5f9"
               }}
             >
-
               <th style={thStyle}>Category</th>
               <th style={thStyle}>Value</th>
               <th style={thStyle}>Unit</th>
@@ -184,22 +166,17 @@ function App() {
               <th style={thStyle}>Status</th>
               <th style={thStyle}>Risk</th>
               <th style={thStyle}>Action</th>
-
             </tr>
-
           </thead>
 
           <tbody>
-
             {records.map((record) => (
-
               <tr
                 key={record.id}
                 style={{
                   borderBottom: "1px solid #e2e8f0"
                 }}
               >
-
                 <td style={tdStyle}>
                   {record.category}
                 </td>
@@ -217,7 +194,6 @@ function App() {
                 </td>
 
                 <td style={tdStyle}>
-
                   <span
                     style={{
                       padding: "6px 12px",
@@ -236,13 +212,10 @@ function App() {
                   >
                     {record.status}
                   </span>
-
                 </td>
 
                 <td style={tdStyle}>
-
                   {record.suspicious ? (
-
                     <span
                       style={{
                         color: "red",
@@ -251,9 +224,7 @@ function App() {
                     >
                       ⚠ Needs Review
                     </span>
-
                   ) : (
-
                     <span
                       style={{
                         color: "green"
@@ -261,17 +232,15 @@ function App() {
                     >
                       Normal
                     </span>
-
                   )}
-
                 </td>
 
                 <td style={tdStyle}>
-
                   {record.status !== "approved" ? (
-
                     <button
-                      onClick={() => approveRecord(record.id)}
+                      onClick={() =>
+                        approveRecord(record.id)
+                      }
                       style={{
                         background: "#2563eb",
                         color: "white",
@@ -284,9 +253,7 @@ function App() {
                     >
                       Approve
                     </button>
-
                   ) : (
-
                     <span
                       style={{
                         color: "green",
@@ -295,21 +262,13 @@ function App() {
                     >
                       Approved
                     </span>
-
                   )}
-
                 </td>
-
               </tr>
-
             ))}
-
           </tbody>
-
         </table>
-
       </div>
-
     </div>
   );
 }
