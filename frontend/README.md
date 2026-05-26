@@ -20,16 +20,17 @@ https://breathe-esg-platform-production.up.railway.app/api/reviews/
 
 ![Dashboard](screenshots/dashboard.png)
 
-### Approved Records
-
-![Approved](screenshots/approved-records.png)
-
 ### Backend API
 
-![API](screenshots/backend-api.png)
+![Backend API](screenshots/backend-api.png)
 
----
+### Approved Records
 
+![Approved Records](screenshots/approved-records.png)
+
+### Upload Success
+
+![Upload Success](screenshots/upload-success.png)
 ## Features
 
 - SAP CSV ingestion
